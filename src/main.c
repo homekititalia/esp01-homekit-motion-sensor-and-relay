@@ -1,17 +1,11 @@
-/*
- * Example of using esp-homekit library to control
- * motion sensor using an Hs501 sensor
- * This uses an OTA mechanism created by HomeACcessoryKid
- *
- */
-
-#define DEVICE_MANUFACTURER "Lizzus"
-#define DEVICE_NAME "Motion-Sensor"
+#define DEVICE_MANUFACTURER "Homekit Italia"
+#define DEVICE_NAME "Motion Sensor and relay"
 #define DEVICE_MODEL "ESP-01S"
 #define DEVICE_SERIAL "12345678"
-#define FW_VERSION "1.0"
+#define FW_VERSION "0.1"
 #define MOTION_SENSOR_GPIO 2
 #define LED_GPIO 3
+#define RELAY_GPIO 1
 #define MAX_NAME_LENGTH 63
 
 
@@ -80,6 +74,12 @@ homekit_accessory_t *accessories[] = {
             &ota_trigger,
             NULL
         }),
+        HOMEKIT_SERVICE(SWITCH, .primary=true, .characteristics=(homekit_characteristic_t*[]){
+            HOMEKIT_CHARACTERISTIC(NAME, "Switch"),
+            &switch_on,
+            &ota_trigger,
+            NULL
+        }),
         NULL
     }),
     NULL
@@ -111,12 +111,30 @@ void motion_sensor_callback(uint8_t gpio) {
 	}
     }
     else {
+    	led_code (LED_GPIO, GENERIC_ERROR);
         printf("Interrupt on %d", gpio);
     }
 
 }
 
+void switch_on_callback(homekit_characteristic_t *_ch, homekit_value_t on, void *context);
+void button_callback(uint8_t gpio, button_event_t event);
 
+void relay_write(bool on) {
+    gpio_write(RELAY_GPIO, on ? 1 : 0);
+}
+
+void switch_on_callback(homekit_characteristic_t *_ch, homekit_value_t on, void *context) {
+    relay_write(switch_on.value.bool_value);
+    led_write(switch_on.value.bool_value);
+}
+
+void motion_sensor_init() {
+    
+    gpio_enable(MOTION_SENSOR_GPIO, GPIO_INPUT);
+    gpio_set_pullup(MOTION_SENSOR_GPIO, false, false);
+    gpio_set_interrupt(MOTION_SENSOR_GPIO, GPIO_INTTYPE_EDGE_ANY, motion_sensor_callback);
+}
 
 void create_accessory_name() {
 
