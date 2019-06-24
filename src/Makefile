@@ -14,8 +14,6 @@ EXTRA_COMPONENTS = \
     	$(abspath ../libs/http_post)
 
 
-
-
 FLASH_SIZE ?= 8
 HOMEKIT_SPI_FLASH_BASE_ADDR ?= 0x8c000
 
