@@ -8,7 +8,6 @@
 #define RELAY_GPIO 1
 #define MAX_NAME_LENGTH 63
 
-
 #include <stdio.h>
 #include <espressif/esp_wifi.h>
 #include <espressif/esp_sta.h>
