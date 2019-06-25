@@ -86,7 +86,8 @@ homekit_accessory_t *accessories[] = {
 
 homekit_server_config_t config = {
     .accessories = accessories,
-    .password = "021-82-017"
+    .password = "021-82-017",
+    .setupId="HKIT",
 };
 
 void motion_sensor_callback(uint8_t gpio) {
