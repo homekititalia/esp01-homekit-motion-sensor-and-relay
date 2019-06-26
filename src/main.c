@@ -86,7 +86,7 @@ homekit_accessory_t *accessories[] = {
 
 homekit_server_config_t config = {
     .accessories = accessories,
-    .password = "021-82-017",
+    .password = "300-12-019",
     .setupId="HKIT",
 };
 
